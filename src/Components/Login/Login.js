@@ -15,6 +15,9 @@ import { LogRequest } from "../../Redux/Actions/LogAction";
 
 const Login = () => {
   const [forgotPwd, setForgotPwd] = useState(false);
+  const [shouldDispatchLogRequest, setShouldDispatchLogRequest] =
+    useState(false);
+  const [formValues, setFormValues] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -40,19 +43,27 @@ const Login = () => {
     }),
     onSubmit: (values) => {
       dispatch(LoginRequest({ values }));
-      console.log(jwtToken1, "mva");
-
-      if (jwtToken1) {
-        const modifiedValues = {
-          ...values,
-          spassword: jwtToken1,
-        };
-        dispatch(LogRequest({ values: modifiedValues }));
-      }
+      setFormValues(values);
+      setShouldDispatchLogRequest(true);
+      // if (jwtToken1) {
+      //   const modifiedValues = {
+      //     ...values,
+      //     spassword: jwtToken1,
+      //   };
+      //   dispatch(LogRequest({ values: modifiedValues }));
+      // }
     },
   });
-  console.log(jwtToken, "token");
-
+  useEffect(() => {
+    if (shouldDispatchLogRequest && jwtToken1) {
+      const modifiedValues = {
+        ...formValues,
+        spassword: jwtToken1,
+      };
+      dispatch(LogRequest({ values: modifiedValues }));
+      setShouldDispatchLogRequest(false);
+    }
+  }, [shouldDispatchLogRequest, jwtToken1, dispatch, formValues]);
   useEffect(() => {
     if (jwtToken) {
       Cookies.set("jwtToken", jwtToken);
