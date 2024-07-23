@@ -12,24 +12,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginRequest } from "../../Redux/Actions/LoginAction";
 import Cookies from "js-cookie";
 import { LogRequest } from "../../Redux/Actions/LogAction";
+import { CircularProgress, Box } from "@mui/material";
 
 const Login = () => {
   const [forgotPwd, setForgotPwd] = useState(false);
   const [shouldDispatchLogRequest, setShouldDispatchLogRequest] =
     useState(false);
   const [formValues, setFormValues] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const onChange = (e) => {
-    console.log(`checked = ${e.target.checked}`);
+    setRememberMe(e.target.checked);
   };
-  console.log(
-    useSelector((state) => state.log),
-    "log"
-  );
+  const { loading } = useSelector((state) => state.Login);
+  const { load } = useSelector((state) => state.log);
+
   const jwtToken1 = useSelector((state) => state.Login.loginData1.Token);
   const jwtToken = useSelector((state) => state?.log?.loginData2?.token);
+  const alertmsg = useSelector((state) => state.Login.loginData1.Response);
   const formik = useFormik({
     initialValues: {
       saas_id: "",
@@ -42,18 +45,24 @@ const Login = () => {
       spassword: Yup.string().required("Please enter Password"),
     }),
     onSubmit: (values) => {
+      if (rememberMe) {
+        localStorage.setItem("loginData", JSON.stringify(values));
+      } else {
+        localStorage.removeItem("loginData");
+      }
       dispatch(LoginRequest({ values }));
       setFormValues(values);
       setShouldDispatchLogRequest(true);
-      // if (jwtToken1) {
-      //   const modifiedValues = {
-      //     ...values,
-      //     spassword: jwtToken1,
-      //   };
-      //   dispatch(LogRequest({ values: modifiedValues }));
-      // }
     },
   });
+  useEffect(() => {
+    const savedLoginData = localStorage.getItem("loginData");
+    if (savedLoginData) {
+      const loginData = JSON.parse(savedLoginData);
+      formik.setValues(loginData);
+      setRememberMe(true);
+    }
+  }, []);
   useEffect(() => {
     if (shouldDispatchLogRequest && jwtToken1) {
       const modifiedValues = {
@@ -63,14 +72,35 @@ const Login = () => {
       dispatch(LogRequest({ values: modifiedValues }));
       setShouldDispatchLogRequest(false);
     }
-  }, [shouldDispatchLogRequest, jwtToken1, dispatch, formValues]);
+    if (alertmsg === "FAILED") {
+      alert("Invalid Saas Id, Username or Password");
+    }
+  }, [shouldDispatchLogRequest, jwtToken1, dispatch, formValues, alertmsg]);
+
   useEffect(() => {
     if (jwtToken) {
       Cookies.set("jwtToken", jwtToken);
-      // localStorage.setItem("jwtToken", jwtToken)
       navigate("/shipment");
+      setIsLoading(true); // Set loading state after navigation
+      setTimeout(() => setIsLoading(false), 2000); // Simulate loading for 2 seconds
     }
-  }, [jwtToken]);
+  }, [jwtToken, navigate]);
+
+  if (isLoading || loading || load) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress style={{ color: "#71e8d2" }} />
+      </Box>
+    );
+  }
+
   return (
     <div className="login-container">
       <div className="login-image">
@@ -109,7 +139,7 @@ const Login = () => {
                         : ""
                     }`}
                     size="large"
-                    style={{ width: "348px", height: "45px" }}
+                    style={{ width: "348px", height: "45px", fontSize: "14px" }}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.saas_id}
@@ -140,7 +170,7 @@ const Login = () => {
                         : ""
                     }`}
                     size="large"
-                    style={{ width: "348px", height: "45px" }}
+                    style={{ width: "348px", height: "45px", fontSize: "14px" }}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.susername}
@@ -171,7 +201,7 @@ const Login = () => {
                         : ""
                     }`}
                     size="large"
-                    style={{ width: "348px", height: "45px" }}
+                    style={{ width: "348px", height: "45px", fontSize: "14px" }}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.spassword}
