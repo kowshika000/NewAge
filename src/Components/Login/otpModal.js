@@ -41,7 +41,7 @@ const SendOtp = ({ open, close, setForgotPwd }) => {
             }}
           >
             <div className="text-center">
-              Password Send to your mail id Successfully !!
+              Password send to your mail id Successfully !!
             </div>
           </div>
 

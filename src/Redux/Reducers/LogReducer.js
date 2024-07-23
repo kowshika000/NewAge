@@ -1,7 +1,7 @@
 import { LOG_REQUEST, LOG_SUCCESS, LOG_FAILURE } from "../ActionTypes";
 const initialState = {
   error: null,
-  loading: false,
+  load: false,
   loginData2: {},
 };
 function logReducer(state = initialState, action) {
@@ -10,21 +10,21 @@ function logReducer(state = initialState, action) {
       return {
         ...state,
         error: null,
-        loading: true,
+        load: true,
       };
     case LOG_SUCCESS:
       console.log("LOG_SUCCESS payload:", action.payload);
       return {
         ...state,
         error: null,
-        loading: false,
+        load: false,
         loginData2: action.payload,
       };
     case LOG_FAILURE:
       return {
         ...state,
         error: action.error,
-        loading: false,
+        load: false,
       };
 
     default:

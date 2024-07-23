@@ -50,7 +50,7 @@ const PasswordChangeSuccess = ({ open, close }) => {
             <Button
               type="primary"
               style={{
-                backgroundColor: "#D32D2F",
+                backgroundColor: "#0DA3DE",
                 height: "40px",
                 borderRadius: "8px",
                 lineHeight: "24px",
