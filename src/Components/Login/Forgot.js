@@ -4,18 +4,22 @@ import { Input, Button } from "antd";
 import SendOtp from "./otpModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { ForgotPswdRequest } from "../../Redux/Actions/ForgotPswdAction";
 
 const Forgot = ({ setForgotPwd }) => {
   const [otp, setOtp] = useState();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      username: "",
+      email_phoneno: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Please enter Username"),
+      email_phoneno: Yup.string().required("Please enter Username"),
     }),
     onSubmit: (values) => {
       console.log(values);
+      dispatch(ForgotPswdRequest({ values }));
       setOtp(true);
     },
   });
@@ -38,7 +42,7 @@ const Forgot = ({ setForgotPwd }) => {
             Username{" "}
             <span
               className={` ${
-                formik.touched.username && formik.errors.username
+                formik.touched.email_phoneno && formik.errors.email_phoneno
                   ? "input-error1"
                   : "inputLabel1"
               }`}
@@ -47,10 +51,10 @@ const Forgot = ({ setForgotPwd }) => {
             </span>
           </div>
           <Input
-            name="username"
+            name="email_phoneno"
             placeholder="Username"
             className={`mt-2 ${
-              formik.touched.username && formik.errors.username
+              formik.touched.email_phoneno && formik.errors.email_phoneno
                 ? "input-error"
                 : ""
             }`}
@@ -58,10 +62,10 @@ const Forgot = ({ setForgotPwd }) => {
             style={{ width: "348px", height: "45px" }}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.username}
+            value={formik.values.email_phoneno}
           />
-          {formik.touched.username && formik.errors.username ? (
-            <div className="error">{formik.errors.username}</div>
+          {formik.touched.email_phoneno && formik.errors.email_phoneno ? (
+            <div className="error">{formik.errors.email_phoneno}</div>
           ) : null}
         </div>
         <div className="mt-5 mx-auto d-flex justify-content-center">

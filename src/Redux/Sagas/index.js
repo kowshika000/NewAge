@@ -21,6 +21,7 @@ import watchDsrSchedule from "./DsrScheduleSaga";
 import watchallPort from "./AllPortSaga";
 import watchFindNewRate from "./FindNewRateSaga";
 import watchLog from "./LogSaga";
+import watchForgetPswd from "./ForgetPswdSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -45,6 +46,7 @@ export default function* rootSaga() {
     watchDsrSchedule(),
     watchallPort(),
     watchFindNewRate(),
-    watchLog()
+    watchLog(),
+    watchForgetPswd(),
   ]);
 }
