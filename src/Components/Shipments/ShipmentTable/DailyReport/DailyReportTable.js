@@ -3,7 +3,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "./DailyReportTable.css";
 import Pagination from "../../../Core-Components/Pagination";
-import group from "../../../../assets/Group 20851.svg";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Columns from "./Columns";
@@ -11,10 +10,11 @@ import { Tooltip } from "antd";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { IconButton } from "@mui/material";
+import { Icon, IconButton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { DsrReportRequest } from "../../../../Redux/Actions/DsrReportAction";
 import { CircularProgress, Box } from "@mui/material";
+import AppsIcon from "@mui/icons-material/Apps";
 
 function DailyReportTable({ filtercolumn, setfiltercolumn }) {
   //This is for get usertoken from profile API data
@@ -59,11 +59,10 @@ function DailyReportTable({ filtercolumn, setfiltercolumn }) {
 
   //This is modify arrayofvalues into objects with default true value
 
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
- 
+
   //This function is used to change the
   // function changeKey(arr) {
   //   var newArr = [];
@@ -253,7 +252,7 @@ function DailyReportTable({ filtercolumn, setfiltercolumn }) {
       </>
     );
   };
- 
+
   const sort = (col) => {
     const handleSort = (col) => {
       const sorted = [...filterReport].sort((a, b) => {
@@ -302,7 +301,6 @@ function DailyReportTable({ filtercolumn, setfiltercolumn }) {
       </div>
     );
   };
-
 
   //This is for pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -576,7 +574,13 @@ function DailyReportTable({ filtercolumn, setfiltercolumn }) {
               fontWeight: "400",
             }}
           >
-            <img className="me-2" src={group}></img>Columns
+            {/* <img
+              className="me-2"
+              src={}
+              style={{ background: "blue" }}
+            ></img> */}
+            <AppsIcon style={{ color: "#71e8d2" }} />
+            Columns
           </p>
         </div>
         {sidebaropen && (

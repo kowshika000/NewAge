@@ -30,11 +30,9 @@ const Header = ({ setShowText, setShowmap }) => {
   };
 
   const handleLogout = () => {
-    Cookies.remove("jwtToken");
-    // const currentURl = window.location.href;
-    // const URL = currentURl.split("/")[0];
-    // URL?.remove();
-    window.location.href = "http://localhost:3000/";
+    Cookies.remove("jwtToken", { path: "/" });
+    // window.location.reload();
+    window.location.href = "/";
   };
 
   const items = [
@@ -65,7 +63,7 @@ const Header = ({ setShowText, setShowmap }) => {
       key: "2",
       label: (
         <Link
-          // to="/"
+          to="/"
           className="text-decoration-none"
           style={{
             fontSize: "14px",
