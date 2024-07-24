@@ -30,8 +30,7 @@ const Header = ({ setShowText, setShowmap }) => {
   };
 
   const handleLogout = () => {
-    Cookies.remove("jwtToken", { path: "/" });
-    // window.location.reload();
+    Cookies.remove("jwtToken");
     window.location.href = "/";
   };
 
@@ -63,7 +62,6 @@ const Header = ({ setShowText, setShowmap }) => {
       key: "2",
       label: (
         <Link
-          to="/"
           className="text-decoration-none"
           style={{
             fontSize: "14px",

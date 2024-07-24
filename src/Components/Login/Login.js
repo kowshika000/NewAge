@@ -19,8 +19,8 @@ const Login = () => {
   const [shouldDispatchLogRequest, setShouldDispatchLogRequest] =
     useState(false);
   const [formValues, setFormValues] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [tokenR, settokenR] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -45,10 +45,10 @@ const Login = () => {
       spassword: Yup.string().required("Please enter Password"),
     }),
     onSubmit: (values) => {
-      if (rememberMe) {
-        localStorage.setItem("loginData", JSON.stringify(values));
-      } else {
-        localStorage.removeItem("loginData");
+      if (!rememberMe) {
+        Cookies.remove("loginData");
+      } else if (rememberMe) {
+        Cookies.set("loginData", JSON.stringify(values));
       }
       dispatch(LoginRequest({ values }));
       setFormValues(values);
@@ -56,7 +56,7 @@ const Login = () => {
     },
   });
   useEffect(() => {
-    const savedLoginData = localStorage.getItem("loginData");
+    const savedLoginData = Cookies.get("loginData");
     if (savedLoginData) {
       const loginData = JSON.parse(savedLoginData);
       formik.setValues(loginData);
@@ -80,13 +80,12 @@ const Login = () => {
   useEffect(() => {
     if (jwtToken) {
       Cookies.set("jwtToken", jwtToken);
+      settokenR(true);
       navigate("/shipment");
-      setIsLoading(true); // Set loading state after navigation
-      setTimeout(() => setIsLoading(false), 2000); // Simulate loading for 2 seconds
     }
   }, [jwtToken, navigate]);
 
-  if (isLoading || loading || load) {
+  if (loading || load || (jwtToken && !tokenR)) {
     return (
       <Box
         sx={{
@@ -214,7 +213,11 @@ const Login = () => {
                   ) : null}
                 </div>
                 <div className="mt-4">
-                  <Checkbox onChange={onChange} className="checkText">
+                  <Checkbox
+                    onChange={onChange}
+                    className="checkText"
+                    checked={rememberMe}
+                  >
                     <span className="checkText">Remember me?</span>
                   </Checkbox>
                 </div>
