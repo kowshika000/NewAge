@@ -59,7 +59,7 @@ const Forgot = ({ setForgotPwd }) => {
                 : ""
             }`}
             size="large"
-            style={{ width: "348px", height: "45px" }}
+            style={{ width: "348px", height: "45px", fontSize: "14px" }}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.email_phoneno}
