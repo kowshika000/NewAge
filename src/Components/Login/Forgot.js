@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Input, Button } from "antd";
 import SendOtp from "./otpModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ForgotPswdRequest } from "../../Redux/Actions/ForgotPswdAction";
 
 const Forgot = ({ setForgotPwd }) => {
-  const [otp, setOtp] = useState();
+  const [otp, setOtp] = useState(false);
   const dispatch = useDispatch();
+  const alertMessage = useSelector(
+    (state) => state.forgot.ForgotPswd.statusmessage
+  );
+  console.log(alertMessage, "alert");
+  const { loading } = useSelector((state) => state.forgot);
+
   const formik = useFormik({
     initialValues: {
       email_phoneno: "",
@@ -18,11 +24,18 @@ const Forgot = ({ setForgotPwd }) => {
       email_phoneno: Yup.string().required("Please enter Username"),
     }),
     onSubmit: (values) => {
-      console.log(values);
       dispatch(ForgotPswdRequest({ values }));
-      setOtp(true);
     },
   });
+  useEffect(() => {
+    if (!loading) {
+      if (alertMessage === "Invalid user name") {
+        alert("Invalid user name");
+      } else if (alertMessage === "SUCCESS") {
+        setOtp(true);
+      }
+    }
+  }, [alertMessage, loading]);
   return (
     <div>
       <div className="loginheader mt-5">Forgot Password</div>
